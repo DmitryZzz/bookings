@@ -14,13 +14,30 @@ import (
 )
 
 const portNumber = ":8080"
+
 var app config.AppConfig
 var session *scs.SessionManager
 
 func main() {
+	err := run()
+	if err != nil {
+		log.Fatal(err)
+	}
 
+	srv := &http.Server{
+		Addr:    portNumber,
+		Handler: routes(&app),
+	}
+	err = srv.ListenAndServe()
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func run() error {
+	// what am i going to put in the session
 	gob.Register(models.Reservation{})
-	
+
 	// change this to true when in production
 	app.InProduction = false
 
@@ -31,25 +48,18 @@ func main() {
 	session.Cookie.Secure = app.InProduction
 
 	app.Session = session
-	
+
 	tc, err := render.CreateTemplateCache()
 	if err != nil {
 		log.Fatal("cannot create template cache")
+		return err
 	}
 	app.TemplateCache = tc
 	app.UseCache = false
-	render.NewTemplates(&app)
 
 	repo := handlers.NewRepo(&app)
-
 	handlers.NewHandlers(repo)
-
-	srv := &http.Server{
-		Addr:    portNumber,
-		Handler: routes(&app),
-	}
-	err = srv.ListenAndServe()
-	if err != nil {
-		log.Fatal(err)
-	}
+	render.NewTemplates(&app)
+	
+	return nil
 }
