@@ -1,0 +1,22 @@
+mode: set
+github.com/DmitryZzz/bookings/internal/handlers/handlers.go:24.47,26.2 1 1
+github.com/DmitryZzz/bookings/internal/handlers/handlers.go:29.33,31.2 1 1
+github.com/DmitryZzz/bookings/internal/handlers/handlers.go:34.67,39.2 3 1
+github.com/DmitryZzz/bookings/internal/handlers/handlers.go:42.68,51.2 5 1
+github.com/DmitryZzz/bookings/internal/handlers/handlers.go:54.74,63.2 4 1
+github.com/DmitryZzz/bookings/internal/handlers/handlers.go:66.78,68.16 2 1
+github.com/DmitryZzz/bookings/internal/handlers/handlers.go:73.2,86.19 6 1
+github.com/DmitryZzz/bookings/internal/handlers/handlers.go:98.2,99.66 2 1
+github.com/DmitryZzz/bookings/internal/handlers/handlers.go:68.16,71.3 2 0
+github.com/DmitryZzz/bookings/internal/handlers/handlers.go:86.19,96.3 4 0
+github.com/DmitryZzz/bookings/internal/handlers/handlers.go:103.71,105.2 1 1
+github.com/DmitryZzz/bookings/internal/handlers/handlers.go:108.69,110.2 1 1
+github.com/DmitryZzz/bookings/internal/handlers/handlers.go:113.75,115.2 1 1
+github.com/DmitryZzz/bookings/internal/handlers/handlers.go:118.79,122.2 3 1
+github.com/DmitryZzz/bookings/internal/handlers/handlers.go:130.79,138.16 3 1
+github.com/DmitryZzz/bookings/internal/handlers/handlers.go:144.2,145.14 2 1
+github.com/DmitryZzz/bookings/internal/handlers/handlers.go:138.16,142.3 3 0
+github.com/DmitryZzz/bookings/internal/handlers/handlers.go:150.70,152.2 1 1
+github.com/DmitryZzz/bookings/internal/handlers/handlers.go:154.81,156.9 2 1
+github.com/DmitryZzz/bookings/internal/handlers/handlers.go:163.2,170.4 4 0
+github.com/DmitryZzz/bookings/internal/handlers/handlers.go:156.9,162.3 4 1
