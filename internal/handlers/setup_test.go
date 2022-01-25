@@ -12,6 +12,7 @@ import (
 	"html/template"
 
 	"github.com/DmitryZzz/bookings/internal/config"
+	"github.com/DmitryZzz/bookings/internal/driver"
 	"github.com/DmitryZzz/bookings/internal/models"
 	"github.com/DmitryZzz/bookings/internal/render"
 	"github.com/alexedwards/scs/v2"
@@ -45,6 +46,14 @@ func getRoutes() http.Handler {
 
 	app.Session = session
 
+	// connect to database
+	log.Println("Connecting to database...")
+	db, err := driver.ConnectSQL("host=localhost port=5432 dbname=bookings user=postgres password=123")
+	if err != nil {
+		log.Fatal("Cannot connect to database! Dying...")
+	}
+	log.Println("Connected to database!")
+
 	tc, err := CreateTestTemplateCache()
 	if err != nil {
 		log.Fatal("cannot create template cache")
@@ -53,7 +62,7 @@ func getRoutes() http.Handler {
 	app.TemplateCache = tc
 	app.UseCache = true
 
-	repo := NewRepo(&app)
+	repo := NewRepo(&app, db)
 	NewHandlers(repo)
 
 	render.NewTemplates(&app)

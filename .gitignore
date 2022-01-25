@@ -3,3 +3,4 @@ database.yml
 coverage.out
 run.bat
 bookings.exe
+*.code-workspace

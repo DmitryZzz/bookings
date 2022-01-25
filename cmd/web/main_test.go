@@ -4,9 +4,10 @@ import "testing"
 
 func TestRun(t *testing.T) {
 
-	err := run()
+	db, err := run()
 	if err != nil {
 		t.Error("failed run")
 	}
-	
+	defer db.SQL.Close()
+
 }

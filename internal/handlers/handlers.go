@@ -6,10 +6,13 @@ import (
 	"net/http"
 
 	"github.com/DmitryZzz/bookings/internal/config"
+	"github.com/DmitryZzz/bookings/internal/driver"
 	"github.com/DmitryZzz/bookings/internal/forms"
 	"github.com/DmitryZzz/bookings/internal/helpers"
 	"github.com/DmitryZzz/bookings/internal/models"
 	"github.com/DmitryZzz/bookings/internal/render"
+	"github.com/DmitryZzz/bookings/internal/repository"
+	"github.com/DmitryZzz/bookings/internal/repository/dbrepo"
 )
 
 // Repo the repository used by handlers
@@ -18,11 +21,14 @@ var Repo *Repository
 // Repository is the repospitory type
 type Repository struct {
 	App *config.AppConfig
+	DB  repository.DatabaseRepo
 }
 
 // NewRepo creates a new repository
-func NewRepo(a *config.AppConfig) *Repository {
-	return &Repository{App: a}
+func NewRepo(a *config.AppConfig, db *driver.DB) *Repository {
+	return &Repository{
+		App: a,
+		DB:  dbrepo.NewPostgresRepo(db.SQL, a)}
 }
 
 // Newhandlers sets the repository for the handlers
@@ -32,13 +38,11 @@ func NewHandlers(r *Repository) {
 
 // Home is the home page handler
 func (m *Repository) Home(w http.ResponseWriter, r *http.Request) {
-
 	render.RenderTemplate(w, r, "home.page.tmpl", &models.TemplateData{})
 }
 
 // About is the about page handler
 func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
-
 	render.RenderTemplate(w, r, "about.page.tmpl", &models.TemplateData{})
 }
 
