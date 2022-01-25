@@ -9,7 +9,7 @@ import (
 	_ "github.com/jackc/pgx/v4/stdlib"
 )
 
-// DB holds the database co nection pool
+// DB holds the database connection pool
 type DB struct {
 	SQL *sql.DB
 }
