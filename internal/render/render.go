@@ -19,7 +19,7 @@ var functions = template.FuncMap{}
 var app *config.AppConfig
 var pathToTemplates = "./templates"
 
-// NewRenderer sets the config for the template package 
+// NewRenderer sets the config for the template package
 func NewRenderer(a *config.AppConfig) {
 	app = a
 }
@@ -71,7 +71,6 @@ func Template(w http.ResponseWriter, r *http.Request, tmpl string, td *models.Te
 // CreateTemplateCache creates a template cache as a map
 func CreateTemplateCache() (map[string]*template.Template, error) {
 	myCache := map[string]*template.Template{}
-
 	pages, err := filepath.Glob(fmt.Sprintf("%s/*.page.tmpl", pathToTemplates))
 	if err != nil {
 		return myCache, err
