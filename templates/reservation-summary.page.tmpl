@@ -5,6 +5,7 @@
 <div class="container">
     <div class="row">
         <div class="col">
+
             <h1 class="mt-5">Reservation Summary</h1>
 
             <hr>
@@ -18,15 +19,15 @@
                     </tr>
                     <tr>
                         <td>Room:</td>
-                        <td>{{$res.FirstName}} {{$res.LastName}}</td>
+                        <td>{{$res.Room.RoomName}}</td>
                     </tr>
                     <tr>
                         <td>Arrival:</td>
-                        <td>{{$res.StartDate}}</td>
+                        <td>{{index .StringMap "start_date"}}</td>
                     </tr>
                     <tr>
                         <td>Departure:</td>
-                        <td>{{$res.EndDate}}</td>
+                        <td>{{index .StringMap "end_date"}}</td>
                     </tr>
                     <tr>
                         <td>Email:</td>
