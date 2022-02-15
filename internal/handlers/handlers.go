@@ -365,6 +365,7 @@ func (m *Repository) ChooseRoom(w http.ResponseWriter, r *http.Request) {
 	// changed to this, so we can test it more easily
 	// split the URL up by /, and grab the 3rd element
 	exploded := strings.Split(r.RequestURI, "/")
+
 	roomID, err := strconv.Atoi(exploded[2])
 	if err != nil {
 		m.App.Session.Put(r.Context(), "error", "missing url parameter")

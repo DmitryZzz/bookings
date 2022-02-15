@@ -16,6 +16,7 @@ require (
 	github.com/cockroachdb/cockroach-go v2.0.1+incompatible // indirect
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
+	github.com/go-playground/assert/v2 v2.0.1 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/gobuffalo/attrs v1.0.1 // indirect
 	github.com/gobuffalo/envy v1.10.1 // indirect
