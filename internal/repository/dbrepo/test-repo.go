@@ -23,13 +23,22 @@ func (m *testDBRepo) InsertReservation(res models.Reservation) (int, error) {
 // InsertRoomRestriction inserts a room restriction into the database
 func (m *testDBRepo) InsertRoomRestriction(r models.RoomRestriction) error {
 	if r.RoomID == 1000 {
-		return errors.New("some error")	
+		return errors.New("some error")
 	}
 	return nil
 }
 
 // SearchAvailabilityByDates returns true if availability exists for roomID, and false if no availability exists
 func (m *testDBRepo) SearchAvailabilityByDatesByRoomID(start, end time.Time, roomId int) (bool, error) {
+	layout := "2006-01-02"
+	goodDate, _ := time.Parse(layout, "2050-01-01")
+	badDate, _ := time.Parse(layout, "2050-12-31")
+	if start == goodDate {
+		return true, nil
+	} else if start == badDate {
+		return false, errors.New("some error")
+	}
+
 	return false, nil
 }
 
@@ -58,6 +67,6 @@ func (m *testDBRepo) GetRoomByID(id int) (models.Room, error) {
 	if id > 2 {
 		return room, errors.New("some error")
 	}
-	room = models.Room{ID: 1, RoomName: "General`s Quarters"}	
+	room = models.Room{ID: 1, RoomName: "General`s Quarters"}
 	return room, nil
 }
