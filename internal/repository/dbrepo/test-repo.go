@@ -89,3 +89,20 @@ func (m *testDBRepo) Authenticate(email, testPassword string) (int, string, erro
 	return id, hashedPassword, nil
 }
 
+// AllReservations returns a slice of all reservations
+func (m *testDBRepo) AllReservations() ([]models.Reservation, error) {
+	var reservations []models.Reservation
+	return reservations, nil
+}
+
+// AllNewRweservations returns a slice of new reservations
+func (m *testDBRepo) AllNewReservations() ([]models.Reservation, error) {
+	var reservations []models.Reservation
+	return reservations, nil
+}
+
+// GetReservationByID returns a reservation by id
+func (m *testDBRepo) GetReservationByID(id int) (models.Reservation, error) {
+	var res models.Reservation
+	return res, nil
+}
