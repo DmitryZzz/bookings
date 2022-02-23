@@ -536,6 +536,54 @@ func (m *Repository) AdminNewReservations(w http.ResponseWriter, r *http.Request
 	})
 }
 
+// AdminPostReservation shows the reservation in the admin tool
+func (m *Repository) AdminPostReservation(w http.ResponseWriter, r *http.Request) {
+
+	err := r.ParseForm()
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	exploded := strings.Split(r.RequestURI, "/")
+	id, err := strconv.Atoi(exploded[4])
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	src := exploded[3]
+	stringMap := make(map[string]string)
+	stringMap["src"] = src
+
+	// get reservation from the database
+	res, err := m.DB.GetReservationByID(id)
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	u := r.URL.Query().Get("updated_at")
+	layout := "2006-01-02"
+	updatedAt, _ := time.Parse(layout, u)
+
+	res.FirstName = r.Form.Get("first_name")
+	res.LastName = r.Form.Get("last_name")
+	res.Email = r.Form.Get("email")
+	res.Phone = r.Form.Get("phone")
+	res.UpdatedAt = updatedAt
+
+	err = m.DB.UpdateReservation(res)
+	if err != nil {
+		helpers.ServerError(w, err)
+		return
+	}
+
+	m.App.Session.Put(r.Context(), "flash", "Changes saved")
+	http.Redirect(w, r, fmt.Sprintf("/admin/reservations-%s", src), http.StatusSeeOther)
+
+}
+
 // AdminShowReservation shows the reservation in the admin tool
 func (m *Repository) AdminShowReservation(w http.ResponseWriter, r *http.Request) {
 
@@ -563,10 +611,21 @@ func (m *Repository) AdminShowReservation(w http.ResponseWriter, r *http.Request
 	render.Template(w, r, "admin-reservations-show.page.tmpl", &models.TemplateData{
 		StringMap: stringMap,
 		Data:      data,
+		Form:      forms.New(nil),
 	})
 }
 
 // AdminReservationsCalendar shows the reservation calendar
 func (m *Repository) AdminReservationsCalendar(w http.ResponseWriter, r *http.Request) {
 	render.Template(w, r, "admin-reservations-calendar.page.tmpl", &models.TemplateData{})
+}
+
+
+// Test
+func (m *Repository) Test(w http.ResponseWriter, r *http.Request) {
+
+	m.App.Session.Put(r.Context(), "flash", "AAaaaaAAAnaNAAN")
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+
+	//render.Template(w, r, "test.page.tmpl", &models.TemplateData{})
 }

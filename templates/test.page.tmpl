@@ -1,0 +1,20 @@
+<head>
+    
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/notie/dist/notie.min.css">
+    <style>
+      /* override styles here */
+      .notie-container {
+        box-shadow: none;
+      }
+    </style>
+  </head>
+  <body>
+    <strong>
+        Test page with notie
+    </strong>
+    <!-- Bottom of body -->
+    <script src="https://unpkg.com/notie"></script>
+    <script>
+        notie.alert({ type: 1, text: 'Success!', stay: true })
+    </script>
+  </body>

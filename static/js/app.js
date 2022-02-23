@@ -112,6 +112,7 @@ function Prompt() {
         custom: custom,
     }
 }
+
 //CSRFToken
 function CheckAvailability (roomID) {
     let tkn = document.querySelector('meta[name="csrf-token"]').content

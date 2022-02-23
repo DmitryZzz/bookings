@@ -75,7 +75,6 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/contact" tabindex="-1" aria-disabled="true">Contact</a>
-                    </li>
                     <li class="nav-item">
                         {{if eq .IsAuthenticated 1}}
                         <li class="nav-item dropdown">
@@ -172,7 +171,7 @@
         {{end}}
         
         {{with .Flash}}
-        notify("{{.}}", "flash")
+        notify("{{.}}", "success")
         {{end}}
         
         {{with .Warning}}
