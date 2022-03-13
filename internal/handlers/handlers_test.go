@@ -150,7 +150,7 @@ func TestRepository_PostReservation(t *testing.T) {
 			reqBody: "start_date=2050-01-01&end_date=2050-01-02&first_name=J&last_name=Smith&email=john@smith.com" +
 				"&phone=123456789&room_id=1",
 			needReader:   true,
-			expectedCode: http.StatusSeeOther,
+			expectedCode: http.StatusOK,
 		},
 		{
 			name: "failure to insert reservation into database",

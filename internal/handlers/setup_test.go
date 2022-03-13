@@ -22,7 +22,7 @@ import (
 
 var app config.AppConfig
 var session *scs.SessionManager
-var pathToTemplates = "./../../templates"
+var pathToTemplates = "./../../../templates"
 var functions = template.FuncMap{}
 
 func TestMain(m *testing.M) {
@@ -123,8 +123,9 @@ func SessionLoad(next http.Handler) http.Handler {
 // CreateTemplateCache creates a template cache as a map
 func CreateTestTemplateCache() (map[string]*template.Template, error) {
 	myCache := map[string]*template.Template{}
-
 	pages, err := filepath.Glob(fmt.Sprintf("%s/*.page.tmpl", pathToTemplates))
+	//p := "C:/Users/zimin8/go/src/github.com/dmitryzzz/bookings/*.page.tmpl"
+	//pages, err := filepath.Glob(p)
 	if err != nil {
 		return myCache, err
 	}
