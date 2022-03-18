@@ -3,26 +3,26 @@ package handlers
 import (
 	"encoding/gob"
 	"fmt"
+	"github.com/alexedwards/scs/v2"
+	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/middleware"
+	"github.com/justinas/nosurf"
+	"github.com/DmitryZzz/bookings/internal/config"
+	"github.com/DmitryZzz/bookings/internal/models"
+	"github.com/DmitryZzz/bookings/internal/render"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"path/filepath"
 	"testing"
 	"time"
-
-	"html/template"
-
-	"github.com/DmitryZzz/bookings/internal/config"
-	"github.com/DmitryZzz/bookings/internal/models"
-	"github.com/DmitryZzz/bookings/internal/render"
-	"github.com/alexedwards/scs/v2"
-	"github.com/go-chi/chi/v5"
-	"github.com/justinas/nosurf"
 )
 
 var app config.AppConfig
 var session *scs.SessionManager
-var pathToTemplates = "./../../../templates"
+var pathToTemplates = "./../../templates"
+
 var functions = template.FuncMap{
 	"humanDate":  render.HumanDate,
 	"formatDate": render.FormatDate,
@@ -30,7 +30,6 @@ var functions = template.FuncMap{
 }
 
 func TestMain(m *testing.M) {
-	// what am I going to put in the session
 	gob.Register(models.Reservation{})
 	gob.Register(models.User{})
 	gob.Register(models.Room{})
@@ -70,24 +69,23 @@ func TestMain(m *testing.M) {
 
 	repo := NewTestRepo(&app)
 	NewHandlers(repo)
-
 	render.NewRenderer(&app)
 
 	os.Exit(m.Run())
 }
 
 func listenForMail() {
-	go func () {
+	go func() {
 		for {
-			_ = <- app.MailChan
+			_ = <-app.MailChan
 		}
 	}()
 }
 
 func getRoutes() http.Handler {
-
 	mux := chi.NewRouter()
 
+	mux.Use(middleware.Recoverer)
 	//mux.Use(NoSurf)
 	mux.Use(SessionLoad)
 
@@ -120,7 +118,7 @@ func getRoutes() http.Handler {
 	mux.Get("/admin/delete-reservation/{src}/{id}/do", Repo.AdminDeleteReservation)
 
 	mux.Get("/admin/reservations/{src}/{id}/show", Repo.AdminShowReservation)
-	mux.Post("/admin/reservations/{src}/{id}", Repo.AdminPostReservation)
+	mux.Post("/admin/reservations/{src}/{id}", Repo.AdminPostShowReservation)
 
 	fileServer := http.FileServer(http.Dir("./static/"))
 	mux.Handle("/static/*", http.StripPrefix("/static", fileServer))
@@ -128,11 +126,13 @@ func getRoutes() http.Handler {
 	return mux
 }
 
-// NoSurf add CSRF protection to all POST requests
+// NoSurf adds CSRF protection to all POST requests
 func NoSurf(next http.Handler) http.Handler {
 	csrfHandler := nosurf.New(next)
+
 	csrfHandler.SetBaseCookie(http.Cookie{
 		HttpOnly: true,
+		Path:     "/",
 		Secure:   app.InProduction,
 		SameSite: http.SameSiteLaxMode,
 	})
@@ -144,13 +144,14 @@ func SessionLoad(next http.Handler) http.Handler {
 	return session.LoadAndSave(next)
 }
 
-// CreateTemplateCache creates a template cache as a map
+// CreateTestTemplateCache creates a template cache as a map
 func CreateTestTemplateCache() (map[string]*template.Template, error) {
+
 	myCache := map[string]*template.Template{}
+
 	pages, err := filepath.Glob(fmt.Sprintf("%s/*.page.tmpl", pathToTemplates))
-	//p := "C:/Users/zimin8/go/src/github.com/dmitryzzz/bookings/*.page.tmpl"
-	//pages, err := filepath.Glob(p)
 	if err != nil {
+		log.Println(err)
 		return myCache, err
 	}
 
@@ -158,20 +159,26 @@ func CreateTestTemplateCache() (map[string]*template.Template, error) {
 		name := filepath.Base(page)
 		ts, err := template.New(name).Funcs(functions).ParseFiles(page)
 		if err != nil {
+			log.Println(err)
 			return myCache, err
 		}
+
 		matches, err := filepath.Glob(fmt.Sprintf("%s/*.layout.tmpl", pathToTemplates))
 		if err != nil {
+			log.Println(err)
 			return myCache, err
 		}
+
 		if len(matches) > 0 {
-			ts, err = ts.ParseGlob(fmt.Sprintf("%s/**.layout.tmpl", pathToTemplates))
+			ts, err = ts.ParseGlob(fmt.Sprintf("%s/*.layout.tmpl", pathToTemplates))
 			if err != nil {
+				log.Println(err)
 				return myCache, err
 			}
 		}
+
 		myCache[name] = ts
 	}
 
-	return myCache, err
+	return myCache, nil
 }

@@ -2,6 +2,7 @@ package dbrepo
 
 import (
 	"errors"
+	"log"
 	"time"
 
 	"github.com/DmitryZzz/bookings/internal/models"
@@ -30,33 +31,66 @@ func (m *testDBRepo) InsertRoomRestriction(r models.RoomRestriction) error {
 
 // SearchAvailabilityByDates returns true if availability exists for roomID, and false if no availability exists
 func (m *testDBRepo) SearchAvailabilityByDatesByRoomID(start, end time.Time, roomId int) (bool, error) {
+	// set up a test time
 	layout := "2006-01-02"
-	goodDate, _ := time.Parse(layout, "2050-01-01")
-	badDate, _ := time.Parse(layout, "2050-12-31")
-	if start == goodDate {
-		return true, nil
-	} else if start == badDate {
+	str := "2049-12-31"
+	t, err := time.Parse(layout, str)
+	if err != nil {
+		log.Println(err)
+	}
+
+	// this is our test to fail the query -- specify 2060-01-01 as start
+	testDateToFail, err := time.Parse(layout, "2060-01-01")
+	if err != nil {
+		log.Println(err)
+	}
+
+	if start == testDateToFail {
 		return false, errors.New("some error")
 	}
 
-	return false, nil
+	// if the start date is after 2049-12-31, then return false,
+	// indicating no availability;
+	if start.After(t) {
+		return false, nil
+	}
+
+	// otherwise, we have availability
+	return true, nil
 }
 
 // SearchAvailabilityForAllRooms returns a slice of available rooms, if any, for given date range
 func (m *testDBRepo) SearchAvailabilityForAllRooms(start, end time.Time) ([]models.Room, error) {
 	var rooms []models.Room
 
+	// if the start date is after 2049-12-31, then return empty slice,
+	// indicating no rooms are available;
 	layout := "2006-01-02"
-	badDate, _ := time.Parse(layout, "2050-12-31")
-	noRoomsDate, _ := time.Parse(layout, "2050-12-30")
+	str := "2049-12-31"
+	t, err := time.Parse(layout, str)
+	if err != nil {
+		log.Println(err)
+	}
 
-	if end == badDate {
+	testDateToFail, err := time.Parse(layout, "2060-01-01")
+	if err != nil {
+		log.Println(err)
+	}
+
+	if start == testDateToFail {
 		return rooms, errors.New("some error")
 	}
-	if end == noRoomsDate {
+
+	if start.After(t) {
 		return rooms, nil
 	}
-	rooms = append(rooms, models.Room{ID: 1, RoomName: "General`s Quarters"})
+
+	// otherwise, put an entry into the slice, indicating that some room is
+	// available for search dates
+	room := models.Room{
+		ID: 1,
+	}
+	rooms = append(rooms, room)
 
 	return rooms, nil
 }
@@ -131,7 +165,7 @@ func (m *testDBRepo) AllRooms() ([]models.Room, error) {
 }
 
 // GetRestrictionsForRoomByDay returns restrictions for a room by date range
-func(m *testDBRepo) GetRestrictionsForRoomByDate(roomId int, start, end time.Time) ([]models.RoomRestriction, error) {
+func (m *testDBRepo) GetRestrictionsForRoomByDate(roomId int, start, end time.Time) ([]models.RoomRestriction, error) {
 	var restrictions []models.RoomRestriction
 	return restrictions, nil
 }

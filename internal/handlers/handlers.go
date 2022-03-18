@@ -548,8 +548,8 @@ func (m *Repository) AdminNewReservations(w http.ResponseWriter, r *http.Request
 	})
 }
 
-// AdminPostReservation shows the reservation in the admin tool
-func (m *Repository) AdminPostReservation(w http.ResponseWriter, r *http.Request) {
+// AdminPostShowReservation shows the reservation in the admin tool
+func (m *Repository) AdminPostShowReservation(w http.ResponseWriter, r *http.Request) {
 
 	err := r.ParseForm()
 	if err != nil {
