@@ -1,24 +1,24 @@
 .my-footer {
-    height: 5em;
-    background-color: #163b65;
-    margin-top: 1.5em;
-    padding: 1em;
-    color: #FFFFFF;
-    font-size: 80%;
+  /* height: 7em; */
+  background-color: #163b65;
+  margin-top: 1.5em;
+  padding: 1em;
+  color: #ffffff;
+  font-size: 80%;
 }
 
 .room-image {
-    max-width: 50%;
+  max-width: 50%;
 }
 
 .redText {
-    color: red;
+  color: red;
 }
 
 .datepicker {
-    z-index: 10000;
-  }
+  z-index: 10000;
+}
 
 .search-form {
-    max-width: 95%;
+  max-width: 95%;
 }
